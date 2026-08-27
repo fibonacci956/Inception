@@ -1,4 +1,4 @@
-*This project was created as part of the 42 curriculum by **hseffih**.*
+*This project has been created as part of the 42 curriculum by **hseffih**.*
 
 ## Description
 
