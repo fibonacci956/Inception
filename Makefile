@@ -148,4 +148,20 @@ check: check-env
 	@echo "=== SITE ($(DOMAIN)) ==="
 	@curl -Ik https://$(DOMAIN) || echo "Site injoignable"
 
-.PHONY: all check-env prepare secrets build up down stop start restart clean fclean deepclean re ps ps-full check
+# ------------------------------------------------------------
+# Logs
+# ------------------------------------------------------------
+
+logs:
+	$(COMPOSE) logs -f
+
+logs-nginx:
+	$(COMPOSE) logs -f nginx
+
+logs-wordpress:
+	$(COMPOSE) logs -f wordpress
+
+logs-mariadb:
+	$(COMPOSE) logs -f mariadb
+
+.PHONY: all check-env prepare secrets build up down stop start restart clean fclean deepclean re ps ps-full check logs logs-nginx logs-wordpress logs-mariadb
