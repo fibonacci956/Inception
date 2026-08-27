@@ -112,11 +112,16 @@ https://hseffih.42.fr
 
 Les ressources suivantes ont été utilisées pour la conception et l'implémentation du projet :
 
-* Alpine Linux Documentation
-* Docker Documentation & Compose Specification
-* NGINX Admin Guide
-* MariaDB Knowledge Base
-* WP-CLI Official Documentation
+- [Alpine Linux Documentation](https://docs.alpinelinux.org/)
+- [Docker Documentation & Compose Specification](https://docs.docker.com/reference/compose-file/)
+- [NGINX Admin Guide](https://docs.nginx.com/nginx/admin-guide/)
+- [MariaDB Knowledge Base](https://mariadb.com/docs/)
+- [WP-CLI Official Documentation](https://make.wordpress.org/cli/handbook/)
+
+## Guides & ressources complémentaires
+
+- [Inception 42 — A Comprehensive Guide to Dockerizing Your First Infrastructure](https://devabdilah.medium.com/inception-42-a-comprehensive-guide-to-dockerizing-your-first-infrastructure-part-iii-a10e93e9d922)
+- [Inception 42 — Guide](https://inception.cluzet.fr/)
 
 ## Description de l'usage de l'IA par tâche
 
