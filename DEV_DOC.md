@@ -248,6 +248,13 @@ Container startup
 | `make check-env` | Verifies that `srcs/.env` exists and that `LOGIN` is defined. |
 | `make prepare` | Creates the MariaDB and WordPress persistence directories. |
 | `make secrets` | Generates missing secret files without overwriting existing ones. |
+| `make ps` | Shows the status of the Compose services. |
+| `make ps-full` | Shows detailed status: healthchecks, restarts, resource usage, network, volumes, images. |
+| `make check` | Global inspection of volumes, networks, containers, and the live site. |
+| `make logs` | Follows the logs of all services. |
+| `make logs-nginx` | Follows the logs of the NGINX service only. |
+| `make logs-wordpress` | Follows the logs of the WordPress service only. |
+| `make logs-mariadb` | Follows the logs of the MariaDB service only. |
 
 ---
 
@@ -806,14 +813,62 @@ Use `make deepclean` only when you intentionally want to completely reset MariaD
 
 ---
 
-# 16. Summary
+# 16. Environment Variables (`srcs/.env`)
+
+The `srcs/.env` file centralizes every configurable value used by `docker-compose.yml` and passed down into the containers (as build args, runtime environment variables, or references to Docker secrets). It is never committed to the repository — only `srcs/.env.example` is versioned, and each developer copies it locally (see section 1.2).
+
+## 16.1 Docker Compose Setup
+
+| Variable | Role |
+|---|---|
+| `LOGIN` | Your 42 login. Used by the **Makefile** (not by Compose directly) to compute `DATA_DIR=/home/$(LOGIN)/data`, i.e. where the MariaDB and WordPress volumes are bind-mounted on the host. Also used to build `DOMAIN_NAME`. |
+| `DOMAIN_NAME` | The domain the site is served on, conventionally `<LOGIN>.42.fr`. It is injected into the NGINX server config (`server_name`) and into the TLS certificate (self-signed or generated), and it's the URL checked by `make check` (`curl -Ik https://<LOGIN>.42.fr`). |
+
+## 16.2 MySQL / MariaDB Setup
+
+| Variable | Role |
+|---|---|
+| `MYSQL_DATABASE` | Name of the database created at MariaDB initialization (`wordpress`). This is the database WordPress will connect to and store its tables in (`wp_options`, `wp_posts`, etc.). |
+| `MYSQL_USER` | Non-root MySQL user (`wpuser_db`) created with full privileges on `MYSQL_DATABASE`. This is the account WordPress uses at runtime — it should never use `root`. |
+| `MYSQL_PASSWORD_FILE` | **Not a password itself** — it's a path (`/run/secrets/db_password`) pointing to a Docker secret file mounted read-only inside the container. The MariaDB entrypoint script reads the file content to set `MYSQL_USER`'s password. This avoids ever writing the real password inside `.env` or an image layer. |
+| `MYSQL_ROOT_PASSWORD_FILE` | Same mechanism as above, but for the MariaDB `root` account (`/run/secrets/db_root_password`). Used only for administrative operations at init time, not by the WordPress app. |
+
+These two `*_FILE` variables correspond to the `secrets/db_password.txt` and `secrets/db_root_password.txt` files generated (once, idempotently) by `make secrets`, then exposed to the containers via the `secrets:` section of `docker-compose.yml`.
+
+## 16.3 WordPress Setup
+
+| Variable | Role |
+|---|---|
+| `WP_CLI_VERSION` | Exact version of `wp-cli` to install (`2.12.0`). Passed as a build **ARG** into `srcs/requirements/wordpress/Dockerfile` (`ARG WP_CLI_VERSION`), used to build the download URL: `https://github.com/wp-cli/wp-cli/releases/download/v${WP_CLI_VERSION}/wp-cli-${WP_CLI_VERSION}.phar`. |
+| `WP_CLI_SHA512` | SHA-512 checksum of that exact `wp-cli` release. Also passed as a build ARG (`ARG WP_CLI_SHA512`) and checked at build time with `sha512sum -c`, so the build **fails immediately** if the downloaded binary doesn't match — protects against a corrupted download or a compromised/mirrored release. |
+| `WP_TITLE` | Site title used by `wp core install` (or equivalent `wp-cli` command) when WordPress is provisioned for the first time (`Inception`). |
+| `WP_ADMIN_USER` | Login of the WordPress administrator account created at first install. Per subject constraints, this must **not** contain "admin"/"administrator" as a substring. |
+| `WP_ADMIN_EMAIL` | Email associated with the admin account. |
+| `WP_ADMIN_PASSWORD_FILE` | Path (`/run/secrets/wp_admin_password`) to the Docker secret holding the admin account password. Read by the WordPress entrypoint at provisioning time, same pattern as the MySQL secrets. |
+| `WP_USER` | Login of the second, non-admin WordPress user created at install (subject requirement: at least one admin + one regular user). |
+| `WP_USER_EMAIL` | Email associated with the regular user account. |
+| `WP_USER_PASSWORD_FILE` | Path (`/run/secrets/wp_user_password`) to the Docker secret holding the regular user's password. |
+
+### Why `*_FILE` instead of plain variables?
+
+Every sensitive value in this project (`db_password`, `db_root_password`, `wp_admin_password`, `wp_user_password`) is passed as a **path to a file**, never as a plain env var containing the secret itself. This is the standard Docker Secrets pattern:
+
+1. `make secrets` generates the four password files under `secrets/` (with `openssl rand -base64 16`), only if they don't already exist.
+2. `docker-compose.yml` declares them under `secrets:` and mounts each one read-only at `/run/secrets/<name>` inside the relevant container.
+3. The container's entrypoint script reads the file at that path (e.g. `$(cat /run/secrets/db_password)`) and uses the value to configure MariaDB or provision WordPress via `wp-cli`.
+
+This keeps the actual secret values out of `.env`, out of `docker inspect` output, and out of the image layers — only the *path* to the secret is ever an environment variable.
+
+---
+
+# 17. Summary
 
 The project architecture is designed around the following principles:
 
 - Docker Compose manages the application services.
 - The `Makefile` provides a simple interface for building, starting, stopping, monitoring, logging, and cleaning the project.
 - `LOGIN` dynamically determines the persistence directory and project domain.
-- Secrets are generated automatically and are not overwritten once created.
+- Secrets are generated automatically and are not overwritten once created, and are injected via the Docker Secrets `*_FILE` pattern rather than plain environment variables.
 - MariaDB and WordPress data are stored persistently on the host.
 - Docker named volumes use bind mount configuration to connect containers to host directories.
 - Dedicated Makefile commands simplify log monitoring for NGINX, WordPress, and MariaDB.
