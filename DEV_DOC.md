@@ -8,15 +8,32 @@ This document describes the technical architecture, environment setup, container
 
 ## 1.1 System Prerequisites
 
-The project requires:
+The project can be run on **Linux or Windows**, provided that the required container environment is properly configured.
 
-- A Linux machine (**Debian/Ubuntu recommended**).
+### Linux
+
+A Linux machine is supported with:
+
 - A configured local user.
 - **Docker Engine**.
 - **Docker Compose V2**.
 - `make`.
 - `openssl`.
 - `curl`.
+- **sudo access**, required to manage the host directories used by the volumes.
+
+### Windows
+
+Windows is supported through **Docker Desktop using the Linux engine and WSL2**.
+
+The following are required:
+
+- **Docker Desktop** with the Linux engine.
+- **WSL2** enabled and properly configured.
+- Docker Compose V2, which is included with Docker Desktop.
+- `make`, `openssl`, and `curl` available in the WSL2 environment if they are required by the project's commands.
+
+> **Note:** A separate Linux virtual machine (VirtualBox, UTM, etc.) is not required when Docker Desktop with WSL2 is properly configured.
 
 The project dynamically uses the value of `LOGIN` defined in `srcs/.env`.
 
