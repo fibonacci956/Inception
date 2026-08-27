@@ -10,7 +10,9 @@ The goal is to design, configure, and deploy a complete, isolated, and secure we
 * **WordPress + PHP-FPM**
 * **MariaDB**
 
-The entire architecture relies on custom-built images based on **Alpine Linux `3.23.5`**, without using pre-built services or the `latest` tag.
+The entire architecture relies on custom-built images based on [Alpine Linux `3.23.5`](https://www.alpinelinux.org/releases/) (released on June 21, 2026, as part of the 3.23 stable series launched in December 2025). This version was intentionally selected to fulfill the requirement specified in **Chapter V (Mandatory part)** of the Inception project rules, which states: *"For performance reasons, the containers must be built either from the penultimate stable version of Alpine or Debian. The choice is yours."* 
+
+Selecting Alpine `3.23.5` meets this exact constraint as the second-to-latest (penultimate) stable release, allowing the project to strike an optimal balance between modern package availability and battle-tested stability, while strictly avoiding volatile `latest` tags and heavy pre-built services. Pinning to this version also guarantees long-term predictability with active security support extending through November 2027.
 
 Incoming traffic is strictly filtered through a single **NGINX** reverse proxy, exposed on port `443` over **HTTPS**, using only secure protocols:
 
