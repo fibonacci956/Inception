@@ -1,67 +1,67 @@
-# Documentation Utilisateur (USER_DOC.md) — Projet Inception
+# User Documentation (USER_DOC.md) — Inception Project
 
-Ce guide explique, en termes simples, comment utiliser, administrer et vérifier le bon fonctionnement de l'infrastructure **Inception**.
+This guide explains, in simple terms, how to use, administer, and verify the proper functioning of the **Inception** infrastructure.
 
 ---
 
-## 1. Services fournis par la stack
+## 1. Services Provided by the Stack
 
-L'infrastructure est composée de trois services conteneurisés interconnectés :
+The infrastructure consists of three interconnected containerized services:
 
 ### 1.1 NGINX — Reverse Proxy & TLS
 
-NGINX agit comme l'unique point d'entrée de l'application sur le port `443`.
+NGINX acts as the application's single entry point on port `443`.
 
-Ses principales responsabilités sont :
+Its main responsibilities are:
 
-* Chiffrer et déchiffrer les communications via **TLSv1.2** et **TLSv1.3**.
-* Utiliser un certificat **auto-signé**.
-* Relayer les requêtes PHP vers le conteneur WordPress via le réseau interne Docker.
+* Encrypting and decrypting communications using **TLSv1.2** and **TLSv1.3**.
+* Using a **self-signed** certificate.
+* Forwarding PHP requests to the WordPress container through the internal Docker network.
 
 ### 1.2 WordPress + PHP-FPM
 
-Ce service constitue le moteur du site web.
+This service is the engine behind the website.
 
-Il permet de :
+It is responsible for:
 
-* Traiter l'application PHP via **PHP-FPM**.
-* Gérer les fichiers du site WordPress.
-* Communiquer avec la base de données MariaDB.
-* Automatiser l'installation et la configuration initiale de WordPress grâce à **WP-CLI**.
-* Créer automatiquement les utilisateurs nécessaires au premier lancement.
+* Processing the PHP application through **PHP-FPM**.
+* Managing the WordPress website files.
+* Communicating with the MariaDB database.
+* Automating the initial installation and configuration of WordPress using **WP-CLI**.
+* Automatically creating the users required during the first startup.
 
 ### 1.3 MariaDB
 
-MariaDB est le système de gestion de base de données relationnelle utilisé par WordPress.
+MariaDB is the relational database management system used by WordPress.
 
-Il stocke notamment :
+It stores, among other things:
 
-* Les articles.
-* Les pages.
-* Les utilisateurs.
-* Les réglages de WordPress.
+* Posts.
+* Pages.
+* Users.
+* WordPress settings.
 
-La base de données est isolée du réseau extérieur et n'est accessible qu'aux services autorisés via le réseau Docker.
+The database is isolated from the external network and can only be accessed by authorized services through the Docker network.
 
 ---
 
-## 2. Démarrer et arrêter le projet
+## 2. Starting and Stopping the Project
 
-### Démarrer le projet
+### Start the Project
 
-Pour lancer l'infrastructure en arrière-plan :
+To start the infrastructure in the background:
 
 ```bash
 make
 ```
 
-### Arrêter le projet sans perdre les données
+### Stop the Project Without Losing Data
 
 ```bash
 make down
 ```
 
-### Redémarrer le projet
+### Restart the Project
 
 ```bash
 make restart
@@ -69,35 +69,35 @@ make restart
 
 ---
 
-## 3. Accéder au site web et au panneau d'administration
+## 3. Accessing the Website and the Administration Panel
 
-### Configurer le nom de domaine local
+### Configure the Local Domain Name
 
-Assurez-vous que le nom de domaine pointe vers votre machine virtuelle en ajoutant une entrée dans le fichier `/etc/hosts` de votre poste client :
+Make sure the domain name points to your virtual machine by adding an entry to the `/etc/hosts` file on your client machine:
 
 ```text
-<IP_DE_LA_VM> hseffih.42.fr
+<VM_IP_ADDRESS> hseffih.42.fr
 ```
 
-Par exemple :
+For example:
 
 ```text
 127.0.0.1 hseffih.42.fr
 ```
 
-### Accéder au site public
+### Access the Public Website
 
-Ouvrez votre navigateur et rendez-vous à l'adresse :
+Open your browser and go to:
 
 ```text
 https://hseffih.42.fr
 ```
 
-> **Note :** Le certificat TLS étant auto-signé, votre navigateur affichera probablement un avertissement de sécurité. Vous devrez accepter l'exception de sécurité pour continuer vers le site.
+> **Note:** Since the TLS certificate is self-signed, your browser will probably display a security warning. You will need to accept the security exception to continue to the website.
 
-### Accéder à l'administration WordPress
+### Access the WordPress Administration Panel
 
-Pour accéder au panneau d'administration WordPress, rendez-vous à :
+To access the WordPress administration panel, go to:
 
 ```text
 https://hseffih.42.fr/wp-admin
@@ -105,92 +105,91 @@ https://hseffih.42.fr/wp-admin
 
 ---
 
-## 4. Localiser et gérer les identifiants
+## 4. Locating and Managing Credentials
 
-Pour des raisons de sécurité, les mots de passe ne sont jamais inscrits en clair dans le code source ou dans le dépôt Git.
+For security reasons, passwords are never stored in plain text in the source code or in the Git repository.
 
-### Où trouver les mots de passe ?
+### Where Can I Find the Passwords?
 
-Les fichiers contenant les secrets sont stockés localement dans le dossier `secrets/`, à la racine du projet. Ce dossier est ignoré par Git.
+Files containing secrets are stored locally in the `secrets/` directory at the root of the project. This directory is ignored by Git.
 
-Les fichiers disponibles sont :
+The available files are:
 
-* `secrets/db_password.txt` : mot de passe de l'utilisateur de la base de données.
-* `secrets/db_root_password.txt` : mot de passe de l'utilisateur `root` de MariaDB.
-* `secrets/wp_admin_password.txt` : mot de passe de l'administrateur WordPress.
-* `secrets/wp_user_password.txt` : mot de passe du second utilisateur WordPress, avec le rôle **Author**.
+* `secrets/db_password.txt`: password for the database user.
+* `secrets/db_root_password.txt`: password for the MariaDB `root` user.
+* `secrets/wp_admin_password.txt`: password for the WordPress administrator.
+* `secrets/wp_user_password.txt`: password for the second WordPress user, who has the **Author** role.
 
-### Consulter un mot de passe
+### View a Password
 
-Par exemple, pour afficher le mot de passe de l'administrateur WordPress :
+For example, to display the WordPress administrator password:
 
 ```bash
 cat secrets/wp_admin_password.txt
 ```
 
-### Identifiants administrateur par défaut
+### Default Administrator Credentials
 
-Les informations de configuration sont définies dans `srcs/.env`.
+The configuration information is defined in `srcs/.env`.
 
-* **Nom d'utilisateur administrateur :** `hseffih`
-* **Email administrateur :** `hseffih@student.42.fr`
+* **Administrator username:** `hseffih`
+* **Administrator email:** `hseffih@student.42.fr`
 
-> Le nom d'utilisateur administrateur ne contient pas de terme interdit tel que `admin`.
+> The administrator username does not contain a forbidden term such as `admin`.
 
 ---
 
-## 5. Vérifier que les services fonctionnent correctement
+## 5. Verifying That the Services Are Working Correctly
 
-### Vérification rapide
+### Quick Check
 
-Utilisez la commande suivante :
+Use the following command:
 
 ```bash
 make check
 ```
 
-Cette commande permet notamment de vérifier :
+This command checks, among other things:
 
-* L'état des volumes Docker.
-* L'état des réseaux.
-* Les conteneurs actifs.
-* L'accessibilité du site via un test `curl`.
+* The status of Docker volumes.
+* The status of Docker networks.
+* The active containers.
+* Website accessibility using a `curl` test.
 
-### Vérification détaillée
+### Detailed Check
 
-Pour afficher l'état détaillé des services et des *healthchecks* :
+To display the detailed status of the services and their *healthchecks*:
 
 ```bash
 make ps-full
 ```
 
-Cette commande permet de vérifier que :
+This command allows you to verify that:
 
-* Chaque conteneur est dans un état **healthy**.
-* Les services ne redémarrent pas de manière inattendue.
-* Le nombre de redémarrages reste stable, idéalement à `0`.
-* Les ressources utilisées par les conteneurs peuvent être surveillées.
-
----
-
-## 6. Résumé des commandes utiles
-
-| Action                                  | Commande       |
-| --------------------------------------- | -------------- |
-| Démarrer le projet                      | `make`         |
-| Arrêter les services                    | `make down`    |
-| Redémarrer le projet                    | `make restart` |
-| Vérifier rapidement l'infrastructure    | `make check`   |
-| Afficher l'état détaillé des conteneurs | `make ps-full` |
+* Each container is in a **healthy** state.
+* Services are not restarting unexpectedly.
+* The restart count remains stable, ideally at `0`.
+* Container resource usage can be monitored.
 
 ---
 
-## 7. Points importants
+## 6. Summary of Useful Commands
 
-* Le site est accessible uniquement via **HTTPS** sur le port `443`.
-* Le certificat TLS est **auto-signé**, ce qui peut provoquer un avertissement dans le navigateur.
-* MariaDB n'est pas directement accessible depuis l'extérieur.
-* Les données sont conservées dans des volumes Docker afin de survivre à l'arrêt ou au redémarrage des conteneurs.
-* Les mots de passe sont stockés dans le dossier `secrets/` et ne doivent pas être ajoutés au dépôt Git.
-* WordPress est configuré automatiquement lors de l'initialisation grâce à **WP-CLI**.
+| Action | Command |
+| --- | --- |
+| Start the project | `make` |
+| Stop the services | `make down` |
+| Restart the project | `make restart` |
+| Quickly check the infrastructure | `make check` |
+| Display detailed container status | `make ps-full` |
 
+---
+
+## 7. Important Points
+
+* The website is accessible only through **HTTPS** on port `443`.
+* The TLS certificate is **self-signed**, which may trigger a warning in the browser.
+* MariaDB is not directly accessible from outside the infrastructure.
+* Data is preserved in Docker volumes so that it survives container shutdowns or restarts.
+* Passwords are stored in the `secrets/` directory and must not be added to the Git repository.
+* WordPress is configured automatically during initialization using **WP-CLI**.
