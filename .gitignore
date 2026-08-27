@@ -1,0 +1,19 @@
+# Secrets réels (mots de passe générés)
+secrets/*
+!secrets/.gitkeep
+
+# Variables d'environnement (contient login, email, domaine)
+srcs/.env
+
+# Docker Compose override local
+docker-compose.override.yml
+
+# Fichiers systèmes
+.DS_Store
+*.log
+
+# Éditeurs
+.vscode/
+.idea/
+*.swp
+*~

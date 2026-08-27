@@ -1,0 +1,103 @@
+services:
+  mariadb:
+    image: mariadb:v1
+    build:
+      context: ./requirements/mariadb
+    restart: unless-stopped
+    env_file:
+      - .env
+    networks:
+      - custom-net
+    volumes:
+      - mariadb_data:/var/lib/mysql
+    secrets:
+      - db_password
+      - db_root_password
+    healthcheck:
+      test: ["CMD-SHELL", "mariadb -h localhost -u\"$$MYSQL_USER\" -p\"$$(cat /run/secrets/db_password)\" -e 'SELECT 1' || exit 1"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+      start_period: 20s
+
+  wordpress:
+    image: wordpress:v1
+    build:
+      context: ./requirements/wordpress
+      args:
+        - WP_CLI_VERSION=${WP_CLI_VERSION}
+        - WP_CLI_SHA512=${WP_CLI_SHA512}
+    restart: unless-stopped
+    env_file:
+      - .env
+    networks:
+      - custom-net
+    volumes:
+      - wordpress_data:/var/www/html
+    secrets:
+      - db_password
+      - wp_admin_password
+      - wp_user_password
+    depends_on:
+      mariadb:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "test -f /var/www/html/wp-config.php || exit 1"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+      start_period: 20s
+
+  nginx:
+    image: nginx:v1
+    build:
+      context: ./requirements/nginx
+      args:
+        - DOMAIN_NAME=${DOMAIN_NAME}
+    restart: unless-stopped
+    networks:
+      - custom-net
+    ports:
+      - "443:443"
+    volumes:
+      - wordpress_data:/var/www/html
+    depends_on:
+      wordpress:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "--no-check-certificate", "--spider", "-q", "https://127.0.0.1:443/"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+      start_period: 20s
+
+networks:
+  custom-net:
+    name: inception_network
+    driver: bridge
+
+volumes:
+  mariadb_data:
+    name: mariadb_volume
+    driver: local
+    driver_opts:
+      type: none
+      device: /home/${LOGIN}/data/mariadb
+      o: bind
+  wordpress_data:
+    name: wordpress_volume
+    driver: local
+    driver_opts:
+      type: none
+      device: /home/${LOGIN}/data/wordpress
+      o: bind
+
+secrets:
+  db_password:
+    file: ../secrets/db_password.txt
+  db_root_password:
+    file: ../secrets/db_root_password.txt
+  wp_admin_password:
+    file: ../secrets/wp_admin_password.txt
+  wp_user_password:
+    file: ../secrets/wp_user_password.txt
