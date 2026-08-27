@@ -25,14 +25,27 @@ Le trafic entrant est strictement filtré via un unique reverse proxy **NGINX**,
 
 Avant de lancer le projet, vous aurez besoin de :
 
-* Une machine virtuelle sous Linux :
+- **Docker**
+  - [Installation de Docker sur Linux](https://docs.docker.com/engine/install/)
+  - [Installation de Docker Desktop sur Windows](https://docs.docker.com/desktop/setup/install/windows-install/)
 
-  * VirtualBox
-  * UTM
-  * ou toute autre solution équivalente
-* `Docker`
-* `Docker Compose` V2
-* Un accès `sudo`, nécessaire pour la gestion des dossiers hôtes utilisés par les volumes.
+- **Docker Compose V2**
+  - Docker Compose V2 est inclus avec Docker Desktop sur Windows.
+  - Sur Linux, vous pouvez suivre la [documentation officielle de Docker Compose](https://docs.docker.com/compose/install/).
+
+- **Un accès sudo sous Linux**, nécessaire pour la gestion des dossiers hôtes utilisés par les volumes.
+  - [Documentation sudo](https://www.sudo.ws/docs/)
+
+### Compatibilité Windows
+
+Le projet peut être lancé sur :
+
+- **Linux**, avec Docker, Docker Compose V2 et `sudo` installés.
+- **Windows**, à condition d'utiliser **Docker Desktop avec le moteur Linux et WSL2** activé.
+  - [Documentation WSL2](https://learn.microsoft.com/windows/wsl/install)
+  - [Documentation Docker Desktop avec WSL2](https://docs.docker.com/desktop/features/wsl/)
+
+> **Remarque :** Une machine virtuelle Linux (VirtualBox, UTM, etc.) n'est pas nécessaire si Docker Desktop avec WSL2 est correctement configuré sous Windows.
 
 ## Installation et lancement rapide
 
