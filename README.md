@@ -1,18 +1,18 @@
-*This project has been created as part of the 42 curriculum by **hseffih**.*
+*This project was created as part of the 42 curriculum by **hseffih**.*
 
 ## Description
 
-**Inception** est un projet d'administration système de l'école 42 qui vise à approfondir la compréhension de la conteneurisation via Docker.
+**Inception** is a system administration project from the 42 school curriculum designed to deepen the understanding of containerization through Docker.
 
-L'objectif est de concevoir, configurer et déployer une infrastructure web complète, isolée et sécurisée, composée de plusieurs services conteneurisés interconnectés :
+The goal is to design, configure, and deploy a complete, isolated, and secure web infrastructure composed of several interconnected containerized services:
 
 * **NGINX**
 * **WordPress + PHP-FPM**
 * **MariaDB**
 
-L'ensemble de l'architecture repose sur des images construites sur mesure à partir d'**Alpine Linux `3.23.5`**, sans utiliser de services prêts à l'emploi ni le tag `latest`.
+The entire architecture relies on custom-built images based on **Alpine Linux `3.23.5`**, without using pre-built services or the `latest` tag.
 
-Le trafic entrant est strictement filtré via un unique reverse proxy **NGINX**, exposé sur le port `443` en **HTTPS**, utilisant exclusivement les protocoles sécurisés :
+Incoming traffic is strictly filtered through a single **NGINX** reverse proxy, exposed on port `443` over **HTTPS**, using only secure protocols:
 
 * `TLSv1.2`
 * `TLSv1.3`
@@ -21,84 +21,84 @@ Le trafic entrant est strictement filtré via un unique reverse proxy **NGINX**,
 
 # Instructions
 
-## Prérequis
+## Prerequisites
 
-Avant de lancer le projet, vous aurez besoin de :
+Before running the project, you will need:
 
 - **Docker**
-  - [Installation de Docker sur Linux](https://docs.docker.com/engine/install/)
-  - [Installation de Docker Desktop sur Windows](https://docs.docker.com/desktop/setup/install/windows-install/)
+  - [Install Docker on Linux](https://docs.docker.com/engine/install/)
+  - [Install Docker Desktop on Windows](https://docs.docker.com/desktop/setup/install/windows-install/)
 
 - **Docker Compose V2**
-  - Docker Compose V2 est inclus avec Docker Desktop sur Windows.
-  - Sur Linux, vous pouvez suivre la [documentation officielle de Docker Compose](https://docs.docker.com/compose/install/).
+  - Docker Compose V2 is included with Docker Desktop on Windows.
+  - On Linux, you can follow the [official Docker Compose documentation](https://docs.docker.com/compose/install/).
 
-- **Un accès sudo sous Linux**, nécessaire pour la gestion des dossiers hôtes utilisés par les volumes.
-  - [Documentation sudo](https://www.sudo.ws/docs/)
+- **sudo access on Linux**, required to manage the host directories used by the volumes.
+  - [sudo documentation](https://www.sudo.ws/docs/)
 
-### Compatibilité Windows
+### Windows Compatibility
 
-Le projet peut être lancé sur :
+The project can be run on:
 
-- **Linux**, avec Docker, Docker Compose V2 et `sudo` installés.
-- **Windows**, à condition d'utiliser **Docker Desktop avec le moteur Linux et WSL2** activé.
-  - [Documentation WSL2](https://learn.microsoft.com/windows/wsl/install)
-  - [Documentation Docker Desktop avec WSL2](https://docs.docker.com/desktop/features/wsl/)
+- **Linux**, with Docker, Docker Compose V2, and `sudo` installed.
+- **Windows**, provided that **Docker Desktop with the Linux engine and WSL2** is enabled.
+  - [WSL2 documentation](https://learn.microsoft.com/windows/wsl/install)
+  - [Docker Desktop with WSL2 documentation](https://docs.docker.com/desktop/features/wsl/)
 
-> **Remarque :** Une machine virtuelle Linux (VirtualBox, UTM, etc.) n'est pas nécessaire si Docker Desktop avec WSL2 est correctement configuré sous Windows.
+> **Note:** A Linux virtual machine (VirtualBox, UTM, etc.) is not required if Docker Desktop with WSL2 is properly configured on Windows.
 
-## Installation et lancement rapide
+## Installation and Quick Start
 
-### 1. Cloner le dépôt
+### 1. Clone the Repository
 
-Clonez le dépôt puis placez-vous à sa racine :
+Clone the repository and move into its root directory:
 
 ```bash
 git clone <repository-url>
 cd inception
 ```
 
-### 2. Configurer les variables d'environnement
+### 2. Configure Environment Variables
 
-Copiez le fichier d'exemple :
+Copy the example file:
 
 ```bash
 cp srcs/.env.example srcs/.env
 ```
 
-Éditez ensuite le fichier `.env` et renseignez notamment :
+Then edit the `.env` file and provide, in particular:
 
-* votre `LOGIN`
-* votre `DOMAIN_NAME`
+* your `LOGIN`
+* your `DOMAIN_NAME`
 
-Par exemple :
+For example:
 
 ```env
 LOGIN=hseffih
 DOMAIN_NAME=hseffih.42.fr
 ```
 
-### 3. Lancer l'infrastructure
+### 3. Start the Infrastructure
 
-Utilisez le `Makefile` pour construire et démarrer l'ensemble de l'infrastructure.
+Use the `Makefile` to build and start the entire infrastructure.
 
-Cette commande prépare également les volumes et génère automatiquement les secrets nécessaires :
+This command also prepares the volumes and automatically generates the required secrets:
 
 ```bash
 make
 ```
 
-### 4. Configurer le domaine local
+### 4. Configure the Local Domain
 
-Ajoutez l'alias de domaine dans le fichier `/etc/hosts` de la machine hôte :
+Add the domain alias to the host machine's `/etc/hosts` file:
 
 ```plaintext
 127.0.0.1 hseffih.42.fr
 ```
 
-### 5. Accéder au site
+### 5. Access the Website
 
-Ouvrez votre navigateur et accédez à :
+Open your browser and navigate to:
 
 ```text
 https://hseffih.42.fr
@@ -106,11 +106,11 @@ https://hseffih.42.fr
 
 ---
 
-# Resources & Usage de l'IA
+# Resources & AI Usage
 
-## Documentation & références classiques
+## Documentation & Standard References
 
-Les ressources suivantes ont été utilisées pour la conception et l'implémentation du projet :
+The following resources were used for the design and implementation of the project:
 
 - [Alpine Linux Documentation](https://docs.alpinelinux.org/)
 - [Docker Documentation & Compose Specification](https://docs.docker.com/reference/compose-file/)
@@ -118,152 +118,150 @@ Les ressources suivantes ont été utilisées pour la conception et l'implément
 - [MariaDB Knowledge Base](https://mariadb.com/docs/)
 - [WP-CLI Official Documentation](https://make.wordpress.org/cli/handbook/)
 
-## Guides & ressources complémentaires
+## Additional Guides & Resources
 
 - [Inception 42 — A Comprehensive Guide to Dockerizing Your First Infrastructure](https://devabdilah.medium.com/inception-42-a-comprehensive-guide-to-dockerizing-your-first-infrastructure-part-iii-a10e93e9d922)
 - [Inception 42 — Guide](https://inception.cluzet.fr/)
 
-## Description de l'usage de l'IA par tâche
+## Description of AI Usage by Task
 
-Dans le cadre de ce projet, l'intelligence artificielle a été utilisée comme un **assistant technique** afin d'optimiser certaines phases de développement, conformément aux directives pédagogiques.
+As part of this project, artificial intelligence was used as a **technical assistant** to optimize certain development phases, in accordance with the educational guidelines.
 
-Son utilisation s'est principalement concentrée sur :
+Its use mainly focused on:
 
-* la réduction des tâches répétitives ;
-* l'exploration de choix architecturaux ;
-* l'analyse de comportements techniques ;
-* la revue et la structuration de code ;
-* la rédaction de documentation.
+* reducing repetitive tasks;
+* exploring architectural choices;
+* analyzing technical behavior;
+* reviewing and structuring code;
+* writing documentation.
 
-### Recherche et conception des réseaux & DNS interne
+### Research and Design of Networking & Internal DNS
 
-L'IA a été utilisée pour analyser le comportement des différents drivers réseau Docker :
+AI was used to analyze the behavior of different Docker network drivers:
 
 * `bridge`
 * `host`
 * `none`
 
-Elle a également servi à explorer et valider le fonctionnement du mini-serveur DNS interne de Docker, accessible depuis les conteneurs via :
+It was also used to explore and validate the operation of Docker's internal DNS server, accessible from containers via:
 
 ```text
 127.0.0.11
 ```
 
-### Sécurité TLS & analyse des Cipher Suites
+### TLS Security & Cipher Suite Analysis
 
-L'IA a été utilisée pour étudier les différentes versions de TLS et comparer les protocoles modernes aux versions obsolètes ou vulnérables.
+AI was used to study different TLS versions and compare modern protocols with outdated or vulnerable ones.
 
-Cela a notamment permis de documenter :
+This notably helped document:
 
-* l'utilisation de `TLSv1.2` et `TLSv1.3` ;
-* l'abandon des protocoles SSL obsolètes ;
-* les vulnérabilités historiques telles que **POODLE** ;
-* le durcissement de la configuration TLS ;
-* la configuration de `ssl_ciphers` ;
-* la désactivation des tickets de session lorsque cela était pertinent.
+* the use of `TLSv1.2` and `TLSv1.3`;
+* the deprecation of obsolete SSL protocols;
+* historical vulnerabilities such as **POODLE**;
+* TLS configuration hardening;
+* the configuration of `ssl_ciphers`;
+* disabling session tickets when relevant.
 
-### Automatisation et robustesse des scripts d'entrypoint
+### Automation and Robustness of Entrypoint Scripts
 
-L'IA a servi à structurer la logique d'initialisation des services afin de garantir une exécution robuste et idempotente.
+AI was used to structure service initialization logic in order to ensure robust and idempotent execution.
 
-Cela concerne notamment :
+This notably concerns:
 
 * **MariaDB**
-
-  * initialisation avec `mysql_install_db` ;
-  * démarrage temporaire du serveur ;
-  * création automatisée de la base de données et des utilisateurs.
+  * initialization with `mysql_install_db`;
+  * temporary server startup;
+  * automated creation of the database and users.
 
 * **WordPress**
+  * use of `wp-cli`;
+  * connection retry management;
+  * service availability checks;
+  * prevention of unnecessary reinstallations.
 
-  * utilisation de `wp-cli` ;
-  * gestion des tentatives de connexion (*retries*) ;
-  * vérifications de disponibilité des services ;
-  * prévention des réinstallations inutiles.
+### Writing and Structuring Documentation
 
-### Rédaction et structuration de la documentation
-
-L'IA a également été utilisée pour améliorer la structuration et la mise en forme des documents techniques du projet :
+AI was also used to improve the structure and formatting of the project's technical documentation:
 
 * `README.md`
 * `DEV_DOC.md`
 * `USER_DOC.md`
 
-Elle a notamment aidé à formaliser les comparatifs architecturaux demandés dans le cadre du projet.
+It notably helped formalize the architectural comparisons required as part of the project.
 
 ---
 
-# Project Description & Choix d'architecture
+# Project Description & Architectural Choices
 
-L'infrastructure repose sur un fichier `docker-compose.yml` centralisant les trois services principaux :
+The infrastructure is based on a `docker-compose.yml` file that centralizes the three main services:
 
 * **NGINX**
 * **WordPress**
 * **MariaDB**
 
-Ces services communiquent via un réseau bridge personnalisé nommé :
+These services communicate through a custom bridge network named:
 
 ```text
 inception_network
 ```
 
-Cette architecture permet :
+This architecture provides:
 
-* l'isolation des services ;
-* la communication interne entre conteneurs ;
-* la résolution dynamique des noms de services ;
-* la limitation de l'exposition réseau ;
-* la persistance des données.
+* service isolation;
+* internal communication between containers;
+* dynamic resolution of service names;
+* limited network exposure;
+* data persistence.
 
 ---
 
-# Comparatifs exigés
+# Required Comparisons
 
 ## 1. Virtual Machines vs Docker
 
 ### Virtual Machine
 
-Une machine virtuelle virtualise une machine physique complète.
+A virtual machine virtualizes an entire physical machine.
 
-Elle comprend généralement :
+It generally includes:
 
-* du matériel virtualisé ou émulé ;
-* un système d'exploitation complet ;
-* son propre noyau ;
-* une pile système indépendante ;
-* un hyperviseur permettant son exécution.
+* virtualized or emulated hardware;
+* a complete operating system;
+* its own kernel;
+* an independent system stack;
+* a hypervisor allowing it to run.
 
-Chaque VM possède donc son propre environnement complet, ce qui entraîne :
+Each VM therefore has its own complete environment, which results in:
 
-* une consommation plus importante de RAM ;
-* une consommation CPU plus élevée ;
-* un espace disque plus conséquent ;
-* un temps de démarrage généralement plus long.
+* higher RAM consumption;
+* higher CPU usage;
+* greater disk space requirements;
+* generally longer startup times.
 
 ### Docker
 
-Docker repose sur une virtualisation au niveau du système d'exploitation.
+Docker relies on operating-system-level virtualization.
 
-Les conteneurs utilisent notamment :
+Containers notably use:
 
-* les **namespaces** pour l'isolation ;
-* les **cgroups** pour la gestion des ressources.
+* **namespaces** for isolation;
+* **cgroups** for resource management.
 
-Contrairement aux machines virtuelles, les conteneurs partagent le noyau du système hôte.
+Unlike virtual machines, containers share the host system's kernel.
 
-Cela permet :
+This allows for:
 
-* un démarrage rapide ;
-* une consommation réduite de ressources ;
-* une meilleure densité de services ;
-* une isolation adaptée aux applications et services.
+* fast startup;
+* reduced resource consumption;
+* higher service density;
+* isolation suitable for applications and services.
 
-### Choix dans le projet
+### Choice in the Project
 
-Le projet combine les deux approches :
+The project combines both approaches:
 
-1. Une **machine virtuelle** héberge l'environnement global, conformément aux exigences pédagogiques du cursus 42.
-2. À l'intérieur de cette machine virtuelle, **Docker** isole chaque service :
+1. A **virtual machine** hosts the overall environment, in accordance with the educational requirements of the 42 curriculum.
+2. Inside this virtual machine, **Docker** isolates each service:
 
 ```text
 VM
@@ -273,10 +271,10 @@ VM
     └── MariaDB
 ```
 
-Cette approche permet de bénéficier à la fois :
+This approach makes it possible to benefit from both:
 
-* de l'isolation globale offerte par la VM ;
-* de la légèreté et de la modularité des conteneurs Docker.
+* the global isolation provided by the VM;
+* the lightweight and modular nature of Docker containers.
 
 ---
 
@@ -284,16 +282,16 @@ Cette approche permet de bénéficier à la fois :
 
 ### Environment Variables
 
-Les variables d'environnement sont principalement utilisées pour transmettre des informations de configuration aux applications.
+Environment variables are mainly used to provide configuration information to applications.
 
-Elles sont adaptées aux données non sensibles, telles que :
+They are suitable for non-sensitive data, such as:
 
-* le nom de domaine ;
-* le nom de la base de données ;
-* les noms d'utilisateurs ;
-* les paramètres de configuration générale.
+* the domain name;
+* the database name;
+* usernames;
+* general configuration settings.
 
-Exemples :
+Examples:
 
 ```env
 DOMAIN_NAME=hseffih.42.fr
@@ -301,37 +299,37 @@ MYSQL_DATABASE=wordpress
 MYSQL_USER=wpuser
 ```
 
-Les variables d'environnement ne doivent pas être utilisées pour stocker des secrets sensibles lorsque ceux-ci peuvent être exposés via :
+Environment variables should not be used to store sensitive secrets when they may be exposed through:
 
-* les fichiers de configuration ;
-* l'inspection des conteneurs ;
-* les processus ;
-* des erreurs de configuration ou de journalisation.
+* configuration files;
+* container inspection;
+* processes;
+* configuration or logging errors.
 
 ### Docker Secrets
 
-Les secrets permettent de fournir des informations sensibles aux services sans les placer directement dans les variables d'environnement ou dans les images.
+Secrets allow sensitive information to be provided to services without placing it directly in environment variables or images.
 
-Les secrets sont accessibles dans les conteneurs sous forme de fichiers, par exemple :
+Secrets are accessible inside containers as files, for example:
 
 ```text
 /run/secrets/
 ```
 
-Ils peuvent contenir :
+They may contain:
 
-* des mots de passe ;
-* des identifiants sensibles ;
-* des clés privées ;
-* d'autres données confidentielles.
+* passwords;
+* sensitive credentials;
+* private keys;
+* other confidential data.
 
-### Choix dans le projet
+### Choice in the Project
 
-Le projet utilise deux mécanismes distincts.
+The project uses two separate mechanisms.
 
-#### Configuration publique
+#### Public Configuration
 
-Le fichier `.env` contient les informations non sensibles :
+The `.env` file contains non-sensitive information:
 
 ```env
 DOMAIN_NAME=hseffih.42.fr
@@ -339,9 +337,9 @@ MYSQL_DATABASE=wordpress
 MYSQL_USER=wpuser
 ```
 
-#### Informations sensibles
+#### Sensitive Information
 
-Les mots de passe sont stockés dans des fichiers de secrets :
+Passwords are stored in secret files:
 
 ```text
 secrets/
@@ -351,51 +349,51 @@ secrets/
 └── wp_user_password.txt
 ```
 
-Ces secrets sont ensuite montés dans les conteneurs sous :
+These secrets are then mounted inside the containers under:
 
 ```text
 /run/secrets/
 ```
 
-Cette séparation permet de distinguer clairement :
+This separation clearly distinguishes between:
 
-* la **configuration** ;
-* les **données sensibles**.
+* **configuration**;
+* **sensitive data**.
 
 ---
 
-## 3. Docker Network : Custom Bridge vs Host Network
+## 3. Docker Network: Custom Bridge vs Host Network
 
 ### Host Network
 
-Avec le mode réseau :
+With the network mode:
 
 ```text
 --network host
 ```
 
-le conteneur utilise directement la pile réseau de la machine hôte.
+the container directly uses the host machine's network stack.
 
-Les conséquences sont notamment :
+The consequences notably include:
 
-* absence d'isolation réseau entre le conteneur et l'hôte ;
-* utilisation directe des interfaces réseau de l'hôte ;
-* absence de nécessité de mapping de ports dans certains cas.
+* no network isolation between the container and the host;
+* direct use of the host's network interfaces;
+* no need for port mapping in some cases.
 
-Cependant, cette approche réduit fortement l'isolation et n'est pas adaptée à l'architecture demandée pour ce projet.
+However, this approach significantly reduces isolation and is not suitable for the architecture required for this project.
 
 ### Custom Bridge Network
 
-Un réseau bridge personnalisé crée un réseau virtuel privé permettant aux conteneurs de communiquer entre eux.
+A custom bridge network creates a private virtual network that allows containers to communicate with each other.
 
-Les services bénéficient :
+Services benefit from:
 
-* d'adresses IP internes ;
-* d'une isolation réseau ;
-* d'une résolution DNS interne ;
-* de la possibilité de communiquer via les noms de services.
+* internal IP addresses;
+* network isolation;
+* internal DNS resolution;
+* the ability to communicate using service names.
 
-Par exemple :
+For example:
 
 ```text
 wordpress
@@ -403,9 +401,9 @@ mariadb
 nginx
 ```
 
-### Choix dans le projet
+### Choice in the Project
 
-Le projet utilise exclusivement un réseau bridge personnalisé :
+The project exclusively uses a custom bridge network:
 
 ```yaml
 networks:
@@ -413,10 +411,10 @@ networks:
     driver: bridge
 ```
 
-L'architecture réseau peut être représentée ainsi :
+The network architecture can be represented as follows:
 
 ```text
-Internet / Navigateur
+Internet / Browser
         │
         │ HTTPS :443
         ▼
@@ -427,17 +425,17 @@ Internet / Navigateur
         └──────────► MariaDB
 ```
 
-Seul **NGINX** expose le port :
+Only **NGINX** exposes port:
 
 ```text
 443
 ```
 
-vers la machine hôte.
+to the host machine.
 
-Les services **WordPress** et **MariaDB** ne sont pas directement accessibles depuis l'extérieur.
+The **WordPress** and **MariaDB** services are not directly accessible from outside.
 
-Ils communiquent uniquement à travers le réseau interne Docker.
+They communicate only through the internal Docker network.
 
 ---
 
@@ -445,48 +443,48 @@ Ils communiquent uniquement à travers le réseau interne Docker.
 
 ### Bind Mounts
 
-Un bind mount relie directement un dossier de la machine hôte à un chemin situé dans le conteneur.
+A bind mount directly links a directory on the host machine to a path inside the container.
 
-Exemple conceptuel :
+Conceptual example:
 
 ```text
-Machine hôte
+Host machine
 /home/user/data
         │
         ▼
-Conteneur
+Container
 /var/lib/mysql
 ```
 
-Cette approche dépend directement :
+This approach directly depends on:
 
-* de la structure du système hôte ;
-* des chemins utilisés ;
-* des permissions du système de fichiers.
+* the host system's structure;
+* the paths being used;
+* file system permissions.
 
-Elle peut également rendre l'environnement moins portable et entraîner des problèmes de permissions.
+It can also make the environment less portable and lead to permission issues.
 
 ### Docker Volumes
 
-Les volumes Docker permettent de gérer la persistance des données indépendamment du cycle de vie des conteneurs.
+Docker volumes make it possible to manage data persistence independently from the lifecycle of containers.
 
-Ils permettent notamment :
+They notably allow:
 
-* de conserver les données après la suppression d'un conteneur ;
-* de séparer les données de l'image ;
-* de gérer plus facilement le stockage persistant.
+* data to be preserved after a container is removed;
+* data to be separated from the image;
+* persistent storage to be managed more easily.
 
-Dans ce projet, les volumes sont configurés pour répondre à la contrainte imposant le stockage des données sous :
+In this project, the volumes are configured to meet the requirement that data be stored under:
 
 ```text
 /home/<login>/data/
 ```
 
-Le volume Docker est associé à un chemin spécifique de l'hôte grâce à des options de montage.
+The Docker volume is associated with a specific host path through mount options.
 
-### Choix dans le projet
+### Choice in the Project
 
-Deux volumes principaux sont utilisés :
+Two main volumes are used:
 
 ```text
 /home/hseffih/data/
@@ -494,12 +492,12 @@ Deux volumes principaux sont utilisés :
 └── wordpress/
 ```
 
-Ils assurent la persistance des données de :
+They ensure the persistence of data for:
 
 * **MariaDB**
 * **WordPress**
 
-Exemple de configuration :
+Configuration example:
 
 ```yaml
 volumes:
@@ -518,25 +516,25 @@ volumes:
       device: /home/hseffih/data/wordpress
 ```
 
-Cette configuration permet :
+This configuration makes it possible to:
 
-* d'utiliser des volumes déclarés dans Docker Compose ;
-* de conserver les données sur la machine hôte ;
-* de respecter le chemin imposé par le sujet ;
-* de garantir la persistance des données même après la recréation des conteneurs.
+* use volumes declared in Docker Compose;
+* keep the data on the host machine;
+* comply with the path required by the project subject;
+* ensure data persistence even after the containers are recreated.
 
 ---
 
-# Architecture globale
+# Overall Architecture
 
-L'architecture finale peut être résumée ainsi :
+The final architecture can be summarized as follows:
 
 ```text
                         ┌─────────────────────┐
-                        │    Navigateur       │
+                        │       Browser       │
                         └──────────┬──────────┘
                                    │
-                              HTTPS :443
+                               HTTPS :443
                                    │
                                    ▼
                         ┌─────────────────────┐
@@ -544,7 +542,7 @@ L'architecture finale peut être résumée ainsi :
                         │ Reverse Proxy + TLS │
                         └──────────┬──────────┘
                                    │
-                    inception_network
+                     inception_network
                                    │
                                    ▼
                         ┌─────────────────────┐
@@ -557,37 +555,36 @@ L'architecture finale peut être résumée ainsi :
                         │      MariaDB        │
                         └─────────────────────┘
                                    │
-                          Persistent Volumes
+                           Persistent Volumes
                                    │
                                    ▼
-                     /home/hseffih/data/
-                     ├── wordpress/
-                     └── mariadb/
+                      /home/hseffih/data/
+                      ├── wordpress/
+                      └── mariadb/
 ```
 
 ---
 
-# Sécurité
+# Security
 
-Les principaux mécanismes de sécurité mis en place sont :
+The main security mechanisms implemented are:
 
-* Utilisation exclusive de **HTTPS**.
-* Exposition uniquement du port `443`.
-* Utilisation de `TLSv1.2` et `TLSv1.3`.
-* Désactivation des protocoles SSL obsolètes.
-* Isolation des services via un réseau bridge Docker personnalisé.
-* Absence d'exposition directe de WordPress et MariaDB.
-* Séparation des variables de configuration et des données sensibles.
-* Utilisation de secrets pour les mots de passe.
-* Images construites localement à partir d'Alpine Linux.
-* Absence d'utilisation du tag `latest`.
-* Persistance des données via des volumes Docker.
+* Exclusive use of **HTTPS**.
+* Exposure of port `443` only.
+* Use of `TLSv1.2` and `TLSv1.3`.
+* Disabling obsolete SSL protocols.
+* Service isolation through a custom Docker bridge network.
+* No direct exposure of WordPress and MariaDB.
+* Separation between configuration variables and sensitive data.
+* Use of secrets for passwords.
+* Locally built images based on Alpine Linux.
+* No use of the `latest` tag.
+* Data persistence through Docker volumes.
 
 ---
 
-## Auteur
+## Author
 
 **hseffih**
 
-Projet réalisé dans le cadre du cursus de **42**.
-
+Project completed as part of the **42** curriculum.
