@@ -1,43 +1,43 @@
-# Documentation Développeur (`DEV_DOC.md`) — Projet Inception
+# Developer Documentation (`DEV_DOC.md`) — Inception Project
 
-Ce document décrit l'architecture technique, la mise en place de l'environnement, le cycle de vie des conteneurs et la gestion des données pour les développeurs travaillant sur le projet **Inception**.
+This document describes the technical architecture, environment setup, container lifecycle, and data management for developers working on the **Inception** project.
 
 ---
 
-## 1. Mise en place de l'environnement depuis zéro
+## 1. Setting Up the Environment from Scratch
 
-### 1.1 Prérequis système
+### 1.1 System Prerequisites
 
-* Une machine Linux (**Debian/Ubuntu recommandé**) avec un utilisateur configuré, par exemple `hseffih`.
-* **Docker Engine** version `24.x` ou supérieure.
+* A Linux machine (**Debian/Ubuntu recommended**) with a configured user, for example `hseffih`.
+* **Docker Engine** version `24.x` or later.
 * **Docker Compose V2**.
 * `make`.
 * `openssl`.
 
-### 1.2 Fichier d'environnement
+### 1.2 Environment File
 
-Copiez le fichier d'exemple et adaptez-le à votre environnement :
+Copy the example file and adapt it to your environment:
 
 ```bash
 cp srcs/.env.example srcs/.env
 ```
 
-Le fichier `srcs/.env` contient les variables de configuration non sensibles, telles que :
+The `srcs/.env` file contains non-sensitive configuration variables, such as:
 
-* Le login WordPress.
-* Le nom de domaine.
-* Les noms des bases de données.
-* Les noms d'utilisateurs.
+* The WordPress login.
+* The domain name.
+* Database names.
+* Usernames.
 
-> Les informations sensibles, telles que les mots de passe, ne doivent pas être stockées directement dans le fichier `.env`.
+> Sensitive information, such as passwords, must not be stored directly in the `.env` file.
 
-### 1.3 Gestion des secrets
+### 1.3 Secret Management
 
-Les mots de passe sensibles ne doivent jamais être inscrits en clair dans le code source ou dans le fichier `.env`.
+Sensitive passwords must never be written in plain text in the source code or in the `.env` file.
 
-Le `Makefile` génère automatiquement les fichiers de secrets manquants dans le dossier `secrets/`.
+The `Makefile` automatically generates any missing secret files in the `secrets/` directory.
 
-Les fichiers concernés sont :
+The following files are concerned:
 
 ```text
 secrets/
@@ -49,55 +49,55 @@ secrets/
 
 ---
 
-## 2. Build et lancement du projet
+## 2. Building and Starting the Project
 
-Le projet est entièrement piloté par un `Makefile` situé à la racine du dépôt.
+The project is entirely managed through a `Makefile` located at the root of the repository.
 
-Celui-ci automatise notamment :
+It automates, among other things:
 
-* La vérification de l'environnement.
-* La création des répertoires nécessaires aux volumes.
-* La génération des secrets manquants.
-* La construction des images Docker.
-* Le lancement des conteneurs avec Docker Compose.
+* Environment validation.
+* Creation of the directories required for volumes.
+* Generation of missing secrets.
+* Building Docker images.
+* Starting containers with Docker Compose.
 
-### 2.1 Commandes principales du Makefile
+### 2.1 Main Makefile Commands
 
-| Commande             | Description                                                                                                                                                                          |
-| -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `make` ou `make all` | Vérifie l'environnement, crée les dossiers nécessaires, génère les secrets manquants, construit les images et lance les conteneurs en arrière-plan.                                  |
-| `make down`          | Arrête et supprime les conteneurs ainsi que le réseau associé.                                                                                                                       |
-| `make stop`          | Arrête les conteneurs sans les supprimer.                                                                                                                                            |
-| `make start`         | Redémarre les conteneurs existants sans les recréer.                                                                                                                                 |
-| `make restart`       | Effectue un cycle complet d'arrêt puis de redémarrage des services.                                                                                                                  |
-| `make clean`         | Arrête les conteneurs et supprime les volumes nommés Docker associés au projet.                                                                                                      |
-| `make fclean`        | Effectue un nettoyage approfondi : arrêt des services, suppression des volumes et suppression des images du projet.                                                                  |
-| `make deepclean`     | Effectue un nettoyage critique et interactif : supprime les conteneurs et images du projet, puis efface physiquement le contenu du dossier `/home/hseffih/data/` après confirmation. |
-| `make re`            | Exécute `make fclean` suivi de `make all` afin de reconstruire complètement le projet.                                                                                               |
+| Command              | Description                                                                                                                                                                      |
+| -------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `make` or `make all` | Checks the environment, creates the required directories, generates missing secrets, builds the images, and starts the containers in the background.                            |
+| `make down`          | Stops and removes the containers as well as the associated network.                                                                                                              |
+| `make stop`          | Stops the containers without removing them.                                                                                                                                      |
+| `make start`         | Restarts existing containers without recreating them.                                                                                                                             |
+| `make restart`       | Performs a complete stop and restart cycle for the services.                                                                                                                      |
+| `make clean`         | Stops the containers and removes the Docker named volumes associated with the project.                                                                                            |
+| `make fclean`        | Performs a thorough cleanup: stops the services, removes the volumes, and removes the project images.                                                                             |
+| `make deepclean`     | Performs a critical and interactive cleanup: removes the project's containers and images, then physically deletes the contents of `/home/hseffih/data/` after confirmation. |
+| `make re`            | Runs `make fclean` followed by `make all` to completely rebuild the project.                                                                                                     |
 
 ---
 
-## 3. Commandes utiles de gestion des conteneurs et des volumes
+## 3. Useful Commands for Managing Containers and Volumes
 
-### 3.1 Vérification de l'état des conteneurs
+### 3.1 Checking Container Status
 
-Pour afficher l'état des services :
+To display the status of the services:
 
 ```bash
 make ps
 ```
 
-Pour obtenir davantage d'informations :
+For more detailed information:
 
 ```bash
 make ps-full
 ```
 
-Ces commandes permettent notamment de vérifier l'état des conteneurs et, selon la configuration, le statut des **healthchecks**.
+These commands allow you to check the status of the containers and, depending on the configuration, the status of the **healthchecks**.
 
-### 3.2 Consultation des logs
+### 3.2 Viewing Logs
 
-Pour suivre les logs d'un service spécifique :
+To follow the logs of a specific service:
 
 ```bash
 docker compose -f srcs/docker-compose.yml logs -f nginx
@@ -111,72 +111,72 @@ docker compose -f srcs/docker-compose.yml logs -f wordpress
 docker compose -f srcs/docker-compose.yml logs -f mariadb
 ```
 
-### 3.3 Accès interactif à un conteneur
+### 3.3 Interactive Access to a Container
 
-Pour ouvrir un shell dans le conteneur WordPress :
+To open a shell inside the WordPress container:
 
 ```bash
 docker exec -it srcs-wordpress-1 sh
 ```
 
-> Le nom exact du conteneur peut varier selon la configuration Docker Compose.
+> The exact container name may vary depending on the Docker Compose configuration.
 
-Pour vérifier les noms des conteneurs en cours d'exécution :
+To check the names of currently running containers:
 
 ```bash
 docker ps
 ```
 
-### 3.4 Inspection du réseau Docker
+### 3.4 Inspecting the Docker Network
 
-Pour inspecter le réseau interne du projet :
+To inspect the project's internal network:
 
 ```bash
 docker network inspect inception_network
 ```
 
-Cette commande permet notamment de consulter :
+This command allows you to view, among other things:
 
-* Les conteneurs connectés au réseau.
-* Les adresses IP internes.
-* Les paramètres réseau utilisés par Docker.
+* The containers connected to the network.
+* Internal IP addresses.
+* Network settings used by Docker.
 
 ---
 
-## 4. Emplacement et persistance des données
+## 4. Data Location and Persistence
 
-Afin de satisfaire les exigences de persistance du projet **Inception**, les données des services avec état (*stateful services*) sont stockées hors des conteneurs, directement sur la machine hôte.
+To meet the persistence requirements of the **Inception** project, data from stateful services is stored outside the containers, directly on the host machine.
 
-### 4.1 Emplacement des données sur l'hôte
+### 4.1 Data Location on the Host
 
-Les données sont stockées dans les répertoires suivants :
+The data is stored in the following directories:
 
 ```text
 /home/hseffih/data/
 ├── mariadb/
-│   └── Données de la base MariaDB
+│   └── MariaDB database data
 │
 └── wordpress/
-    └── Fichiers WordPress, contenus et uploads
+    └── WordPress files, content, and uploads
 ```
 
-Plus précisément :
+More specifically:
 
-| Service   | Emplacement sur l'hôte         |
-| --------- | ------------------------------ |
-| MariaDB   | `/home/hseffih/data/mariadb`   |
-| WordPress | `/home/hseffih/data/wordpress` |
+| Service   | Location on the Host              |
+| --------- | --------------------------------- |
+| MariaDB   | `/home/hseffih/data/mariadb`      |
+| WordPress | `/home/hseffih/data/wordpress`    |
 
-### 4.2 Mécanisme de persistance
+### 4.2 Persistence Mechanism
 
-Les volumes nommés Docker :
+The Docker named volumes:
 
 * `mariadb_volume`
 * `wordpress_volume`
 
-utilisent le driver `local` avec une configuration de type **bind mount**.
+use the `local` driver with a **bind mount** configuration.
 
-Le mécanisme repose notamment sur les options suivantes :
+The mechanism relies in particular on the following options:
 
 ```yaml
 driver: local
@@ -186,48 +186,47 @@ driver_opts:
   device: /home/hseffih/data/...
 ```
 
-Cette configuration permet d'associer directement un volume Docker à un répertoire physique présent sur la machine hôte.
+This configuration directly maps a Docker volume to a physical directory on the host machine.
 
-### 4.3 Garanties de persistance
+### 4.3 Persistence Guarantees
 
-Grâce à cette architecture :
+Thanks to this architecture:
 
-* Les données ne sont pas stockées uniquement à l'intérieur des conteneurs.
-* La suppression ou la recréation des conteneurs n'entraîne pas automatiquement la perte des données présentes sur l'hôte.
-* Les données MariaDB et WordPress restent accessibles tant que les répertoires correspondants sur l'hôte ne sont pas supprimés.
+* Data is not stored exclusively inside the containers.
+* Removing or recreating containers does not automatically cause the loss of data stored on the host.
+* MariaDB and WordPress data remains accessible as long as the corresponding directories on the host are not deleted.
 
-> **Attention :** la commande `make deepclean` supprime physiquement le contenu du dossier `/home/hseffih/data/` après confirmation. Cette opération entraîne donc la suppression définitive des données persistantes du projet.
+> **Warning:** the `make deepclean` command physically deletes the contents of the `/home/hseffih/data/` directory after confirmation. This operation therefore permanently removes the project's persistent data.
 
 ---
 
-## 5. Cycle de vie simplifié du projet
+## 5. Simplified Project Lifecycle
 
-Le cycle de vie standard du projet peut être résumé comme suit :
+The standard project lifecycle can be summarized as follows:
 
 ```text
 make
   │
-  ├── Vérification de l'environnement
+  ├── Environment validation
   │
-  ├── Création des répertoires de données
+  ├── Creation of data directories
   │
-  ├── Génération des secrets manquants
+  ├── Generation of missing secrets
   │
-  ├── Build des images Docker
+  ├── Docker image build
   │
-  └── Lancement des services
+  └── Service startup
           │
           ├── NGINX
           ├── WordPress
           └── MariaDB
 ```
 
-Les données persistantes restent stockées sur l'hôte :
+Persistent data remains stored on the host:
 
 ```text
-Conteneur MariaDB ──────► /home/hseffih/data/mariadb
-Conteneur WordPress ────► /home/hseffih/data/wordpress
+MariaDB Container ──────► /home/hseffih/data/mariadb
+WordPress Container ────► /home/hseffih/data/wordpress
 ```
 
-Cette séparation entre les conteneurs et les données persistantes permet de reconstruire l'environnement applicatif sans perdre les données, tant que les répertoires de persistance de l'hôte ne sont pas supprimés.
-
+This separation between containers and persistent data makes it possible to rebuild the application environment without losing data, as long as the persistence directories on the host are not deleted.
