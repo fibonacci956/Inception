@@ -87,8 +87,10 @@ deepclean: check-env fclean
 	@echo "⚠️  Suppression définitive et irréversible de $(DATA_DIR)"
 	@read -p "Confirmer ? [y/N] " ans; \
 	if [ "$$ans" = "y" ]; then \
-		sudo rm -rf $(DATA_DIR)/mariadb/* $(DATA_DIR)/wordpress/*; \
-		echo "Données supprimées."; \
+		sudo sh -c 'rm -rf $(DATA_DIR)/mariadb $(DATA_DIR)/wordpress'; \
+		docker rmi -f mariadb:v1 wordpress:v1 nginx:v1 2>/dev/null || true; \
+		docker builder prune -a -f --filter "label=com.docker.compose.project=srcs" 2>/dev/null || docker builder prune -a -f; \
+		echo "Données, images et cache supprimés."; \
 	else \
 		echo "Annulé."; \
 	fi
@@ -120,10 +122,16 @@ ps-full:
 	@echo ""
 	@echo "=== RÉSEAUX ==="
 	@docker network inspect inception_network --format \
-		'{{range .Containers}}{{.Name}} -> {{.IPv4Address}}{{"\n"}}{{end}}' 2>/dev/null || echo "Réseau introuvable"
+	'{{range .Containers}}{{$$.Name}} : {{.Name}} -> {{.IPv4Address}}{{"\n"}}{{end}}' 2>/dev/null || echo "Réseau introuvable"
 	@echo ""
 	@echo "=== VOLUMES ==="
 	@docker volume ls --filter "name=volume" --format "table {{.Name}}\t{{.Driver}}\t{{.Mountpoint}}"
+	@echo ""
+	@echo "--- Chemins hôte réels (bind mount) ---"
+	@for v in $$(docker volume ls --filter "name=volume" -q); do \
+		device=$$(docker volume inspect $$v --format '{{ index .Options "device" }}' 2>/dev/null); \
+		echo "$$v -> $${device:-N/A}"; \
+	done
 	@echo ""
 	@echo "=== IMAGES DU PROJET ==="
 	@docker images --format "table {{.Repository}}\t{{.Tag}}\t{{.Size}}\t{{.CreatedSince}}" | \
